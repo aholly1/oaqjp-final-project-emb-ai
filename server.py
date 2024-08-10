@@ -19,6 +19,10 @@ Router to handle user inputed text to be analysed
 def emotion_detection():
     text_to_analyse = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyse)
+    
+    if response.get('dominant_emotion') is None:
+        return "Invalid text! Please try again!", 400
+        
     emotions_str = ", ".join([f"'{emotion}': {score}" for emotion, score in response.items() if emotion != 'dominant_emotion'])
     dominant_emotion = response.get('dominant_emotion')
     return f"For the given statement, the system response is {emotions_str}. The dominant emotion is {dominant_emotion}."
